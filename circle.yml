@@ -1,0 +1,22 @@
+machine:
+  node:
+    version: 4.3.2
+  environment:
+    SNOWFLAKE_ACCOUNT: stridespark
+    SNOWFLAKE_USERNAME: TEST_NODE
+
+dependencies:
+  pre:
+    - mv circle.npmrc ~/.npmrc
+
+test:
+  pre:
+    - tsc
+  post:
+    - mv coverage/* $CIRCLE_ARTIFACTS/ || exit_on_error "No coverage!"
+
+deployment:
+  npm:
+    branch: master
+    commands:
+      - npm run 2npm
