@@ -1,2 +1,3 @@
-# snowflake-util
-A util for interacting with snowflake
+# raven-util
+A util for init'ing sentry raven using credstash
+
