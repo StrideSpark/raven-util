@@ -7,6 +7,11 @@
     "test": "istanbul cover _mocha",
     "2npm": "tsc --declaration && publish"
   },
+  "typings": "index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/StrideSpark/raven-util.git"
@@ -28,7 +33,7 @@
     "mocha": "3.0.2",
     "publish": "0.6.0",
     "tslint": "3.15.1",
-    "typescript": "2.0.2"
+    "typescript": "2.0.10"
   },
   "dependencies": {
     "credstash-promise": "2.0.2",
