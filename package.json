@@ -36,7 +36,7 @@
     "typescript": "2.0.10"
   },
   "dependencies": {
-    "credstash-promise": "2.0.2",
-    "raven": "0.12.1"
+    "credstash-promise": "2.0.3",
+    "raven": "1.1.1"
   }
 }
