@@ -3,7 +3,7 @@
  */
 
 import { assert } from 'chai';
-import { init } from '../index';
+import { init } from '../src';
 import * as AWS from 'aws-sdk';
 AWS.config.region = 'us-west-2';
 
