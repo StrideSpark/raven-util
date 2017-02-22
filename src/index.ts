@@ -9,6 +9,7 @@ async function fetchSentryUrl(env: string, appName: string) {
 }
 
 export interface RavenClient {
+
     captureExceptionPromise: (err: any) => Promise<string>;
     captureMessagePromise: (msg: string) => Promise<string>;
 }
@@ -27,18 +28,18 @@ export async function init(env: string, appName: string, extraOptions?: Object):
             }
         }, extraOptions)).install();
 
-    Raven.captureExceptionPromise = (err: any) => new Promise<string>((resolve, reject) =>
-        Raven.captureException(err, (sendErr: any, eventId: string) => {
+    Raven.captureExceptionPromise = (err: any, extra?: any) => new Promise<string>((resolve, reject) =>
+        Raven.captureException(err, extra, (sendErr: any, eventId: string) => {
             if (sendErr) reject({ sendErr, eventId })
             resolve(eventId)
         }));
 
-    Raven.captureMessagePromise = (msg: string) => new Promise<string>((resolve, reject) =>
-        Raven.captureMessage(msg, (sendErr: any, eventId: string) => {
+    Raven.captureMessagePromise = (msg: string, extra?: any) => new Promise<string>((resolve, reject) =>
+        Raven.captureMessage(msg, extra, (sendErr: any, eventId: string) => {
             if (sendErr) reject({ sendErr, eventId })
             resolve(eventId)
         }));
-    
+
     return Raven as RavenClient;
 }
 

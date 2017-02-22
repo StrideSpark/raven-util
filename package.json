@@ -33,10 +33,10 @@
     "mocha": "3.0.2",
     "publish": "0.6.0",
     "tslint": "3.15.1",
-    "typescript": "2.0.10"
+    "typescript": "^2.1.6"
   },
   "dependencies": {
-    "credstash-promise": "2.0.3",
-    "raven": "1.1.1"
+    "credstash-promise": "^2.0.0",
+    "raven": "^1.1.2"
   }
 }
