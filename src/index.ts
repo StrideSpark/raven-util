@@ -9,9 +9,8 @@ async function fetchSentryUrl(env: string, appName: string) {
 }
 
 export interface RavenClient {
-
-    captureExceptionPromise: (err: any) => Promise<string>;
-    captureMessagePromise: (msg: string) => Promise<string>;
+    captureExceptionPromise: (err: any, extra?: any) => Promise<string>;
+    captureMessagePromise: (msg: string, extra?: any) => Promise<string>;
 }
 
 export async function init(env: string, appName: string, extraOptions?: Object): Promise<RavenClient> {
