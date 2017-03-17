@@ -33,7 +33,7 @@
     "mocha": "3.0.2",
     "publish": "0.6.0",
     "tslint": "3.15.1",
-    "typescript": "^2.1.6"
+    "typescript": "^2.2.1"
   },
   "dependencies": {
     "credstash-promise": "^2.0.0",
