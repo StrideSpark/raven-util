@@ -1,9 +1,13 @@
-import { fetchCred } from 'credstash-promise';
+import { fetchAppCred } from 'credstash-promise';
 const Raven = require('raven');
 
 async function fetchSentryUrl(env: string, appName: string) {
     if (env !== 'dev') {
-        return fetchCred(`${appName}.sentry.url`);
+        const cred = await fetchAppCred(env, appName, `sentry.url`, '');
+        if (cred === '') {
+            return undefined
+        }
+        return cred;
     }
     return undefined;
 }
@@ -19,9 +23,10 @@ export async function init(env: string, appName: string, extraOptions?: Object):
     Raven.config(sentryUrl,
         Object.assign({
             captureUnhandledRejections: true,
-            environment: env,
+            environment: appName,
             release: process.env.BUILD_NUM,
             tags: {
+                env,
                 'build_hash': process.env.BUILD_HASH,
                 'build_time': process.env.BUILD_TIME,
             }
