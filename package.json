@@ -4,12 +4,14 @@
   "description": "Contains a helper to get a connection to sentry raven",
   "main": "src/index.js",
   "scripts": {
-    "test": "MOCHA_FILE=./output/junit.xml nyc mocha --reporter mocha-multi --reporter-options spec=-,mocha-junit-reporter=-",
+    "test": "NODE_ENV=test KEY_ID=3b013fd4-5640-4076-ab8c-296dedf225e5 MOCHA_FILE=./output/junit.xml nyc mocha --forbid-only --reporter mocha-multi --reporter-options spec=-,mocha-junit-reporter=-",
     "2npm": "tsc --declaration && publish",
     "prettier": "prettier --write '**/*.ts' '**/*.tsx'",
     "lintfix": "tslint -p . --fix",
     "lint": "tslint -p .",
-    "report": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "report": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "mocha": "NODE_ENV=test KEY_ID=3b013fd4-5640-4076-ab8c-296dedf225e5 mocha",
+    "devdeps": "yarn add --dev typescript mocha chai sinon prettier tslint-config-prettier tslint-plugin-prettier codecov mocha-lcov-reporter nyc mocha-multi mocha-junit-reporter mocha-notifier-reporter"
   },
   "typings": "src/index.d.ts",
   "files": [
@@ -32,21 +34,24 @@
     "@types/mocha": "2.2.31",
     "@types/node": "6.0.38",
     "aws-sdk": "2.6.2",
-    "chai": "3.5.0",
+    "chai": "^4.1.2",
     "codecov": "^2.3.0",
     "istanbul": "0.4.5",
     "mocha": "^4.0.1",
     "mocha-junit-reporter": "^1.15.0",
     "mocha-lcov-reporter": "^1.3.0",
     "mocha-multi": "^0.11.0",
+    "mocha-notifier-reporter": "^0.1.2",
     "nyc": "^11.2.1",
     "prettier": "^1.7.4",
     "publish": "0.6.0",
+    "sinon": "^4.0.1",
     "tslint": "^5.5.0",
     "tslint-config-prettier": "^1.5.0",
     "tslint-plugin-prettier": "^1.3.0",
     "tslint-stridespark": "^2.0.4",
-    "typescript": "^2.2.1"
+    "typescript": "^2.5.3",
+    "source-map-support": "^0.5.0"
   },
   "dependencies": {
     "credstash-promise": "^2.0.0",

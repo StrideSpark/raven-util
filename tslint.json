@@ -1,18 +1,10 @@
 {
-  "extends": [
-    "tslint-stridespark",
-    "tslint-plugin-prettier",
-    "tslint-config-prettier"
-  ],
-  "rules": {
-    "no-invalid-this": [true, "check-function-in-method"],
-    "no-var-keyword": true,
-    "no-use-before-declare": true,
-    "no-conditional-assignment": true,
-    "no-shadowed-variable": true,
-    "no-switch-case-fall-through": true,
-    "no-unused-expression": true,
-    "triple-equals": true,
-    "prettier": true
-  }
+    "extends": [
+        "tslint-stridespark",
+        "tslint-config-prettier",
+        "tslint-plugin-prettier"
+    ],
+    "rules": {
+        "prettier": true
+    }
 }
