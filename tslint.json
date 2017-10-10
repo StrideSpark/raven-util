@@ -1,4 +1,9 @@
 {
+  "extends": [
+    "tslint-stridespark",
+    "tslint-plugin-prettier",
+    "tslint-config-prettier"
+  ],
   "rules": {
     "no-invalid-this": [true, "check-function-in-method"],
     "no-var-keyword": true,
@@ -9,6 +14,7 @@
     "no-unreachable": true,
     "no-unused-expression": true,
     "no-unused-variable": true,
-    "triple-equals": true
+    "triple-equals": true,
+    "prettier": true
   }
 }
