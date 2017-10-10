@@ -1,6 +1,6 @@
 {
   "name": "@stridespark/raven-util",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Contains a helper to get a connection to sentry raven",
   "main": "src/index.js",
   "scripts": {
