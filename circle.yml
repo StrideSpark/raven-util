@@ -1,22 +1,46 @@
-machine:
-  node:
-    version: 4.3.2
-  environment:
-    SNOWFLAKE_ACCOUNT: stridespark
-    SNOWFLAKE_USERNAME: TEST_NODE
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: stridespark/build-image:1.0.14-node8
+    steps:
+      - checkout
 
-dependencies:
-  pre:
-    - mv circle.npmrc ~/.npmrc
+      - restore_cache:
+          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run: yarn
+      - save_cache:
+          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - /home/circleci/.cache/yarn/v1
+            
+      - run: node_modules/.bin/tsc
 
-test:
-  pre:
-    - tsc
-  post:
-    - mv coverage/* $CIRCLE_ARTIFACTS/ || exit_on_error "No coverage!"
+      - run: yarn run lint
+      
+      - run: yarn test
 
-deployment:
-  npm:
-    branch: master
-    commands:
-      - if [[ $DAILY_TESTS != true ]]; then npm run 2npm; fi
+      - run: yarn run report
+
+      - store_test_results:
+          path: output/
+
+      - setup_remote_docker:
+          reusable: true
+          exclusive: false
+
+      - deploy:
+          name: Publish to NPM
+          command: |
+            if [ "${DAILY_TESTS}" != "true" ] && [ "${CIRCLE_BRANCH}" == "staging" ]; then
+              npm run 2npm
+            else
+              echo skip
+            fi
+
+experimental:
+  notify:
+    branches:
+      only:
+        - staging
