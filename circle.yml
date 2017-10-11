@@ -23,6 +23,8 @@ jobs:
 
       - run: yarn run report
 
+      - run: npm info @stridespark/raven-util
+
       - store_test_results:
           path: output/
 
