@@ -4,33 +4,26 @@ jobs:
     working_directory: /app
     docker:
       - image: stridespark/build-image:1.0.14-node8
+        environment:
+          TERM: xterm
     steps:
       - checkout
 
       - restore_cache:
-          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: yarnlock-{{ checksum "yarn.lock" }}
       - run: yarn
       - save_cache:
-          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: yarnlock-{{ checksum "yarn.lock" }}
           paths:
             - /home/circleci/.cache/yarn/v1
             
       - run: node_modules/.bin/tsc
-
-      - run: yarn run lint
-      
+      - run: yarn lint
       - run: yarn test
-
-      - run: yarn run report
-
-      - run: npm info @stridespark/raven-util
+      - run: yarn report
 
       - store_test_results:
           path: output/
-
-      - setup_remote_docker:
-          reusable: true
-          exclusive: false
 
       - deploy:
           name: Publish to NPM
