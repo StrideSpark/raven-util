@@ -1,5 +1,6 @@
 import { fetchAppCred } from 'credstash-promise';
-const Raven = require('raven');
+import * as Raven from 'raven';
+import { ConstructorOptions, Client } from 'raven';
 
 async function fetchSentryUrl(env: string, appName: string) {
     if (env !== 'dev') {
@@ -12,7 +13,7 @@ async function fetchSentryUrl(env: string, appName: string) {
     return undefined;
 }
 
-export interface RavenClient {
+export interface RavenClient extends Client {
     captureExceptionPromise: (err: any, extra?: any) => Promise<string>;
     captureMessagePromise: (msg: string, extra?: any) => Promise<string>;
 }
@@ -20,42 +21,51 @@ export interface RavenClient {
 export async function init(
     env: string,
     appName: string,
-    extraOptions?: Object
+    extraOptions?: Partial<ConstructorOptions>
 ): Promise<RavenClient> {
     const sentryUrl = await fetchSentryUrl(env, appName);
 
-    Raven.config(
-        sentryUrl,
-        Object.assign(
-            {
-                captureUnhandledRejections: true,
-                environment: appName,
-                release: process.env.BUILD_NUM,
-                tags: {
-                    env,
-                    build_hash: process.env.BUILD_HASH,
-                    build_time: process.env.BUILD_TIME,
+    const client = Raven.config(sentryUrl || false, {
+        captureUnhandledRejections: true,
+        environment: appName,
+        release: process.env.BUILD_NUM,
+        tags: {
+            env,
+            build_hash: process.env.BUILD_HASH || 'unk',
+            build_time: process.env.BUILD_TIME || 'unk',
+        },
+
+        ...extraOptions,
+    });
+
+    client.install();
+
+    (client as any).captureExceptionPromise = (err: any, tags?: any) =>
+        new Promise<string>((resolve, reject) =>
+            client.captureException(
+                err,
+                {
+                    tags,
+                    fingerprint: ['{{ default }}', env, appName],
                 },
-            },
-            extraOptions
-        )
-    ).install();
-
-    Raven.captureExceptionPromise = (err: any, tags?: any) =>
-        new Promise<string>((resolve, reject) =>
-            Raven.captureException(err, { tags }, (sendErr: any, eventId: string) => {
-                if (sendErr) reject({ sendErr, eventId });
-                resolve(eventId);
-            })
+                (sendErr: any, eventId: string) => {
+                    if (sendErr) reject({ sendErr, eventId });
+                    resolve(eventId);
+                }
+            )
         );
 
-    Raven.captureMessagePromise = (msg: string, tags?: any) =>
+    (client as any).captureMessagePromise = (msg: string, tags?: any) =>
         new Promise<string>((resolve, reject) =>
-            Raven.captureMessage(msg, { tags }, (sendErr: any, eventId: string) => {
-                if (sendErr) reject({ sendErr, eventId });
-                resolve(eventId);
-            })
+            client.captureMessage(
+                msg,
+                { tags, fingerprint: ['{{ default }}', env, appName] },
+                (sendErr: any, eventId: string) => {
+                    if (sendErr) reject({ sendErr, eventId });
+                    resolve(eventId);
+                }
+            )
         );
 
-    return Raven as RavenClient;
+    return client as RavenClient;
 }
