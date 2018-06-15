@@ -27,10 +27,9 @@ export async function init(
 
     const client = Raven.config(sentryUrl || false, {
         captureUnhandledRejections: true,
-        environment: appName,
+        environment: env,
         release: process.env.BUILD_NUM,
         tags: {
-            env,
             build_hash: process.env.BUILD_HASH || 'unk',
             build_time: process.env.BUILD_TIME || 'unk',
         },
