@@ -45,7 +45,6 @@ export async function init(
                 err,
                 {
                     tags,
-                    fingerprint: ['{{ default }}', env, appName],
                 },
                 (sendErr: any, eventId: string) => {
                     if (sendErr) reject({ sendErr, eventId });
@@ -56,14 +55,10 @@ export async function init(
 
     (client as any).captureMessagePromise = (msg: string, tags?: any) =>
         new Promise<string>((resolve, reject) =>
-            client.captureMessage(
-                msg,
-                { tags, fingerprint: ['{{ default }}', env, appName] },
-                (sendErr: any, eventId: string) => {
-                    if (sendErr) reject({ sendErr, eventId });
-                    resolve(eventId);
-                }
-            )
+            client.captureMessage(msg, { tags }, (sendErr: any, eventId: string) => {
+                if (sendErr) reject({ sendErr, eventId });
+                resolve(eventId);
+            })
         );
 
     return client as RavenClient;
