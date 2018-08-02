@@ -1,0 +1,26 @@
+##############################
+# Example Simple Settings
+#############################
+mergeable:
+  pull_requests:
+    # Minimum of 5 approvals is needed.
+    approvals: 1 
+
+    # label:
+    #     must_include:
+    #       regex: `^IMPI`
+    #       message: `Must be labeled with IMPI to be mergeable.`
+    #     must_exclude:
+    #       regex: 'WIP'
+    #       message: 'Cannot include WIP label.'
+
+    description:
+        no_empty:
+          enabled: true
+          message: 'Cannot have empty description.'
+        must_include:
+          regex: 'Test Plan:[\w\W]*\w+[\w\W]*Subscribers:'
+          message: 'Your description must contain a "Test Plan".'
+        # must_exclude:
+        #   regex: 'DO NOT MERGE'
+        #   message: 'Description cannot contain "DO NOT MERGE".'
